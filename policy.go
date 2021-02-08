@@ -12,7 +12,7 @@ func (c *Conditional) String() string { return "conditional" }
 
 func (c *Conditional) List(ctx context.Context, p []*forward.Proxy, state *request.Request) []*forward.Proxy {
 	params := Parameters{state: state, extractors: c.extractors}
-	for _, r := range c.rules {
+	for _, r := range c.fwdRules {
 		result, err := r.expr.Eval(params)
 		if err != nil {
 			return nil

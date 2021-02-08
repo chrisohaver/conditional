@@ -6,12 +6,13 @@ import (
 )
 
 type Conditional struct {
-	rules      []rule
+	fwdRules   []fwdRule
+	viewRules  []*govaluate.EvaluableExpression
 	extractors extractorMap
 	Next       plugin.Handler
 }
 
-type rule struct {
+type fwdRule struct {
 	expr      *govaluate.EvaluableExpression
 	upstreams []int
 	group     string

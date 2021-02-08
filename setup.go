@@ -60,7 +60,14 @@ func parse(c *caddy.Controller) (*Conditional, error) {
 
 	for c.NextBlock() {
 		switch c.Val() {
-		case "group":
+		case "view": // boolean expression for server block filtering (requires server view filtering)
+			args := c.RemainingArgs()
+			expr, err := govaluate.NewEvaluableExpressionWithFunctions(strings.Join(args, " "), funcs)
+			if err != nil {
+				return cond, err
+			}
+			cond.viewRules = append(cond.viewRules, expr)
+		case "group": // defines groupings for forward plugin upstreams (requires pluggable forward policies)
 			args := c.RemainingArgs()
 			group := make([]int, len(args[1:]))
 			for i, up := range args[1:] {
@@ -71,12 +78,12 @@ func parse(c *caddy.Controller) (*Conditional, error) {
 				group[i] = u
 			}
 			groups[args[0]] = group
-		case "use":
+		case "use": // defines forward policy rules (requires pluggable forward policies)
 			args := c.RemainingArgs()
 			if len(args) == 0 {
 				return cond, c.ArgErr()
 			}
-			var r rule
+			var r fwdRule
 			r.group = args[0]
 
 			if len(args) > 2 {
@@ -90,18 +97,18 @@ func parse(c *caddy.Controller) (*Conditional, error) {
 				}
 				r.expr = expr
 			}
-			cond.rules = append(cond.rules, r)
+			cond.fwdRules = append(cond.fwdRules, r)
 		default:
 			return cond, c.Errf("unknown property '%s'", c.Val())
 		}
 	}
 
-	for i := range cond.rules {
-		if ups, ok := groups[cond.rules[i].group]; ok {
-			cond.rules[i].upstreams = ups
+	for i := range cond.fwdRules {
+		if ups, ok := groups[cond.fwdRules[i].group]; ok {
+			cond.fwdRules[i].upstreams = ups
 			continue
 		}
-		return cond, c.Errf("unknown group '%s'", cond.rules[i].group)
+		return cond, c.Errf("unknown group '%s'", cond.fwdRules[i].group)
 	}
 
 	return cond, nil
