@@ -36,7 +36,7 @@ Requires view-capable CoreDNS (https://github.com/chrisohaver/coredns/tree/views
 
 The example below will return:
 * `test. 3600 IN A 1.1.1.1`, for queries with a source address in 127.0.0.0/24
-* `test. 3600 IN A 2.2.2.2`, for queries with a source address in 192.168.0.0/24
+* `test. 3600 IN A 2.2.2.2`, for queries with a source address in 192.168.0.0/16
 * `test. 3600 IN A 3.3.3.3`, for all others
 
 ```
