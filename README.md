@@ -26,7 +26,7 @@ conditional {
 
 ### CoreDNS Views Example
 
-The example below implements CIDR based split DNS routing.  It will return a different
+The abstract example below implements CIDR based split DNS routing.  It will return a different
 answer for `test.` depending on client's IP address.  It returns ...
 * `test. 3600 IN A 1.1.1.1`, for queries with a source address in 127.0.0.0/24
 * `test. 3600 IN A 2.2.2.2`, for queries with a source address in 192.168.0.0/16
@@ -80,6 +80,13 @@ conditional {
 
 
 ### Pluggable _forward_ Policy Example
+
+The following (abstract) example defines 3 groups, each containing a single upstream server.
+It defines three rules.  When forward uses the `conditional` policy, these rules are
+evaluated...
+* If the client IP address is local (in 127.0.0.0/24), it will forward to group `c` (127.0.0.1:5392)
+* If the query type is `A`, it will forward to group `a` (127.0.0.1:5390)
+* If the query type is `AAAA`, it will forward to group `b` (127.0.0.1:5391)
 
 ```
 .:5399 {
