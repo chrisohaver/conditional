@@ -1,14 +1,15 @@
 # Conditional
 
-_Conditional_ is an example/experimental CoreDNS plugin allows a user to define
-boolean expressions for use by other CoreDNS plugins/functions.  It currently
-only interfaces with two somewhat unrelated POC state features, neither of which
-are part of CoreDNS proper:
+_Conditional_ is an example/experimental CoreDNS plugin that implements two
+somewhat unrelated POC state features, neither of which are part of CoreDNS proper:
 
-* CoreDNS Views (requires: https://github.com/chrisohaver/coredns/tree/views) 
-* Conditional forwarding via pluggable _forward_ plugin policies (requires: https://github.com/chrisohaver/coredns/tree/fwd-poliplug).
+* **CoreDNS Advanced Routing**: with which you can define criteria that controls to which server blocks
+  queries are routed. (requires: https://github.com/chrisohaver/coredns/tree/views)
+* **Conditional forwarding** via pluggable _forward_ plugin policies: with which you
+  can define a forward policy that can be used by the forward plugin.
+  (requires: https://github.com/chrisohaver/coredns/tree/fwd-poliplug).
 
-## CoreDNS Views
+## CoreDNS Advanced Routing
 
 This option controls how CoreDNS will route queries to the enclosing server block.
 Using this option requires view-capable CoreDNS (https://github.com/chrisohaver/coredns/tree/views).
@@ -58,10 +59,10 @@ answer for `test.` depending on client's IP address.  It returns ...
 }
 ```
 
-## Pluggable _forward_ Policy
+## Conditional _forward_ Policy
 
-Requires policy-pluggable _forward_ plugin (https://github.com/chrisohaver/coredns/tree/fwd-poliplug).
-These options define a forward policy that can be used by the policy-pluggable _forward_ plugin.
+These options define an expression based forward policy that can be used by the policy-pluggable _forward_ plugin.
+This requires policy-pluggable _forward_ plugin (https://github.com/chrisohaver/coredns/tree/fwd-poliplug).
 
 ### Syntax
 ```
