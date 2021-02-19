@@ -15,7 +15,7 @@ func init() { plugin.Register("conditional", setup) }
 func setup(c *caddy.Controller) error {
 	cond, err := parseOnce(c)
 	if err != nil {
-		return plugin.Error("forward", err)
+		return plugin.Error("conditional", err)
 	}
 
 	dnsserver.GetConfig(c).AddPlugin(func(next plugin.Handler) plugin.Handler {
