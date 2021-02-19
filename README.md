@@ -1,31 +1,25 @@
-# Conditional
+# Serve
 
-_Conditional_ is an example/experimental CoreDNS plugin that implements two
-somewhat unrelated POC state features, neither of which are part of CoreDNS proper:
+_Serve_ is an example CoreDNS plugin that allows the routing of queries to be
+controlled by user defined expressions.
 
-* **CoreDNS Advanced Routing**: with which you can define criteria that controls to which server blocks
-  queries are routed. (requires: https://github.com/chrisohaver/coredns/tree/views)
-* **Conditional forwarding** via pluggable _forward_ plugin policies: with which you
-  can define a forward policy that can be used by the forward plugin.
-  (requires: https://github.com/chrisohaver/coredns/tree/fwd-poliplug).
+This plugin requires view-capable CoreDNS (https://github.com/chrisohaver/coredns/tree/views).
 
-## CoreDNS Advanced Routing
-
-This option controls how CoreDNS will route queries to the enclosing server block.
-Using this option requires view-capable CoreDNS (https://github.com/chrisohaver/coredns/tree/views).
-
-### Syntax
+## Syntax
 ```
-conditional {
-    view EXPRESSION
+serve {
+    EXPRESSION
 }
 ```
 
-* `view` **EXPRESSION** - CoreDNS will not route incoming queries to the enclosing server block
-  if any **EXPRESSION** evaluates to false. See the **Expressions** section below for available variables and functions.
+* **EXPRESSION** - CoreDNS will not route incoming queries to the enclosing server block
+  if any **EXPRESSION** evaluates to false. Multiple **EXPRESSION** can be given on separate lines.
+  See the **Expression Syntax** section below for available variables and functions.
   
+CoreDNS will only route a query to a given server block if the query falls within the server block's
+zone (per normal routing behavior), and all **EXPRESSION** listed in *serve* evaluate to true.
 
-### CoreDNS Views Example
+## Examples
 
 The abstract example below implements CIDR based split DNS routing.  It will return a different
 answer for `test.` depending on client's IP address.  It returns ...
@@ -35,8 +29,8 @@ answer for `test.` depending on client's IP address.  It returns ...
 
 ```
 . {
-  conditional {
-    view incidr(client_ip, '127.0.0.0/24')
+  serve {
+    incidr(client_ip, '127.0.0.0/24')
   }
   hosts {
     1.1.1.1 test
@@ -44,8 +38,8 @@ answer for `test.` depending on client's IP address.  It returns ...
 }
 
 . {
-  conditional {
-    view incidr(client_ip, '192.168.0.0/16')
+  serve {
+    incidr(client_ip, '192.168.0.0/16')
   }
   hosts {
     2.2.2.2 test
@@ -59,72 +53,7 @@ answer for `test.` depending on client's IP address.  It returns ...
 }
 ```
 
-## Conditional _forward_ Policy
-
-These options define an expression based forward policy that can be used by the policy-pluggable _forward_ plugin.
-This requires policy-pluggable _forward_ plugin (https://github.com/chrisohaver/coredns/tree/fwd-poliplug).
-
-### Syntax
-```
-conditional {
-    group GROUP-NAME UPSTREAM-INDEX ...
-    use GROUP-NAME if EXPRESSION
-}
-```
-
-* `group` - assigns a **GROUP-NAME** to a set of **UPSTREAM-INDEX**. **UPSTREAM-INDEX** are the
-  integer index of the upstream defined in the forward plugin. e.g. If there are three upstreams
-  defined by forward, then the index values are 0, 1, and 2.
-* `use` - if the **EXPRESSION** evaluates to true for the incoming query, the forward policy will return upstream
-  servers assigned to the **GROUP-NAME**. The forward plugin will then attempt to route the query to those upstreams.
-  See the **Expressions** section below for available variables and functions.
-
-
-### Pluggable _forward_ Policy Example
-
-The following (abstract) example defines 3 groups, each containing a single upstream server.
-It defines three rules.  When forward uses the `conditional` policy, these rules are
-evaluated...
-* If the client IP address is local (in 127.0.0.0/24), it will forward to group `c` (127.0.0.1:5392)
-* If the query type is `A`, it will forward to group `a` (127.0.0.1:5390)
-* If the query type is `AAAA`, it will forward to group `b` (127.0.0.1:5391)
-
-```
-.:5399 {
-  conditional {
-    group a 0
-    group b 1
-    group c 2
-    use c if incidr(client_ip, '127.0.0.0/24') 
-    use a if type == 'A'
-    use b if type == 'AAAA'
-  }
-  forward . 127.0.0.1:5390 127.0.0.1:5391  127.0.0.1:5392 {
-    policy conditional
-  }
-}
-
-.:5390 {
-  hosts {
-    1.2.3.4 a
-  }
-}
-
-.:5391 {
-  hosts {
-    0::5:6:7:8 a
-  }
-}
-
-.:5392 {
-  hosts {
-    9.9.9.9 a
-  }
-}
-
-```
-
-## Expressions
+## Expression Syntax
 
 ### Available Variables
 

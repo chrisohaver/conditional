@@ -1,13 +1,13 @@
-package conditional
+package serve
 
 import (
 	"github.com/coredns/coredns/request"
 )
 
-func (c *Conditional) Filter(state request.Request) bool {
+func (c *Serve) Filter(state request.Request) bool {
 	params := Parameters{state: &state, extractors: c.extractors}
 	// return true if all expressions evaluate to true
-	for _, expr := range c.viewRules {
+	for _, expr := range c.rules {
 		result, err := expr.Eval(params)
 		if err != nil {
 			return false
