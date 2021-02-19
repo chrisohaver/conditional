@@ -56,12 +56,12 @@ func parse(c *caddy.Controller) (*Serve, error) {
 	}
 
 	for c.NextBlock() {
-			args := c.RemainingArgs()
-			expr, err := govaluate.NewEvaluableExpressionWithFunctions(strings.Join(args, " "), funcs)
-			if err != nil {
-				return cond, err
-			}
-			cond.rules = append(cond.rules, expr)
+		args := append([]string{c.Val()}, c.RemainingArgs()...)
+		expr, err := govaluate.NewEvaluableExpressionWithFunctions(strings.Join(args, " "), funcs)
+		if err != nil {
+			return cond, err
+		}
+		cond.rules = append(cond.rules, expr)
 	}
 
 	return cond, nil
