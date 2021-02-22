@@ -1,18 +1,23 @@
 # Conditional
 
-_Conditional_ is an example/experimental CoreDNS plugin that implements two
-somewhat unrelated POC state features, neither of which are part of CoreDNS proper:
+_Conditional_ is an example/experimental CoreDNS plugin that implements the interfaces
+defined by two somewhat independent POC state CoreDNS features, neither of which are part
+of CoreDNS proper:
 
 * **CoreDNS Advanced Routing**: with which you can define criteria that controls to which server blocks
   queries are routed. (requires: https://github.com/chrisohaver/coredns/tree/views)
 * **Conditional forwarding** via pluggable _forward_ plugin policies: with which you
-  can define a forward policy that can be used by the forward plugin.
+  can define a forward policy based on a user expression that can be used by the forward plugin.
   (requires: https://github.com/chrisohaver/coredns/tree/fwd-poliplug).
 
 ## CoreDNS Advanced Routing
 
 This option controls how CoreDNS will route queries to the enclosing server block.
 Using this option requires view-capable CoreDNS (https://github.com/chrisohaver/coredns/tree/views).
+
+**Note:** See the [advanced-routing](https://github.com/chrisohaver/conditional/tree/advanced-routing) branch for a version of this plugin that exclusively implements this
+feature, and renames the plugin to "serve".
+
 
 ### Syntax
 ```
