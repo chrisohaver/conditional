@@ -4,7 +4,7 @@ _Conditional_ is an example/experimental CoreDNS plugin that implements the inte
 defined by two somewhat independent POC state CoreDNS features, neither of which are part
 of CoreDNS proper:
 
-* **CoreDNS Advanced Routing**: with which you can define criteria that controls to which server blocks
+* **CoreDNS Advanced Routing**: with which you can define criteria that control to which server blocks
   queries are routed. (requires: https://github.com/chrisohaver/coredns/tree/views)
 * **Conditional forwarding** via pluggable _forward_ plugin policies: with which you
   can define a forward policy based on a user expression that can be used by the forward plugin.
