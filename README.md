@@ -104,7 +104,7 @@ evaluated...
     use a if type == 'A'
     use b if type == 'AAAA'
   }
-  forward . 127.0.0.1:5390 127.0.0.1:5391  127.0.0.1:5392 {
+  fwdpolicy . 127.0.0.1:5390 127.0.0.1:5391  127.0.0.1:5392 {
     policy conditional
   }
 }
