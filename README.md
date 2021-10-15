@@ -6,9 +6,9 @@ of CoreDNS proper:
 
 * **CoreDNS Advanced Routing**: with which you can define criteria that control to which server blocks
   queries are routed. (requires: https://github.com/chrisohaver/coredns/tree/views)
-* **Conditional forwarding** via pluggable _forward_ plugin policies: with which you
-  can define a forward policy based on a user expression that can be used by the forward plugin.
-  (requires: https://github.com/chrisohaver/coredns/tree/fwd-poliplug).
+* **Conditional forwarding** via pluggable forwarding plugin policies: with which you
+  can define a forward policy based on a user expression that can be used by the _fwdpolicy_ plugin.
+  (requires use of external plugin: https://github.com/chrisohaver/coredns/fwdpolicy).
 
 ## CoreDNS Advanced Routing
 
@@ -66,8 +66,8 @@ answer for `test.` depending on client's IP address.  It returns ...
 
 ## Conditional _forward_ Policy
 
-These options define an expression based forward policy that can be used by the policy-pluggable _forward_ plugin.
-This requires policy-pluggable _forward_ plugin (https://github.com/chrisohaver/coredns/tree/fwd-poliplug).
+These options define an expression based forward policy that can be used by the policy-pluggable _fwdpolicy_ plugin.
+(https://github.com/chrisohaver/coredns/fwdpolicy).
 
 ### Syntax
 ```
