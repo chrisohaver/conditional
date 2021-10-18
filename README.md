@@ -8,7 +8,7 @@ of CoreDNS proper:
   queries are routed. (requires: https://github.com/chrisohaver/coredns/tree/views)
 * **Conditional forwarding** via pluggable forwarding plugin policies: with which you
   can define a forward policy based on a user expression that can be used by the _fwdpolicy_ plugin.
-  (requires use of external plugin: https://github.com/infobloxopen/coredns/fwdpolicy).
+  (requires use of external plugin: https://github.com/infobloxopen/fwdpolicy).
 
 ## CoreDNS Advanced Routing
 
@@ -67,7 +67,7 @@ answer for `test.` depending on client's IP address.  It returns ...
 ## Conditional _forward_ Policy
 
 These options define an expression based forward policy that can be used by the policy-pluggable _fwdpolicy_ plugin.
-(https://github.com/infobloxopen/coredns/fwdpolicy).
+(https://github.com/infobloxopen/fwdpolicy).
 
 ### Syntax
 ```
