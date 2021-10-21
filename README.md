@@ -1,75 +1,12 @@
-# Conditional
+# conditional
 
-_Conditional_ is an example/experimental CoreDNS plugin that implements the interfaces
-defined by two somewhat independent POC state CoreDNS features, neither of which are part
-of CoreDNS proper:
+_conditional_ defines an expression based forwarding policy that the _fwdpolicy_ plugin can use.
 
-* **CoreDNS Advanced Routing**: with which you can define criteria that control to which server blocks
-  queries are routed. (requires: https://github.com/chrisohaver/coredns/tree/views)
-* **Conditional forwarding** via pluggable forwarding plugin policies: with which you
-  can define a forward policy based on a user expression that can be used by the _fwdpolicy_ plugin.
-  (requires use of external plugin: https://github.com/infobloxopen/fwdpolicy).
-
-## CoreDNS Advanced Routing
-
-This option controls how CoreDNS will route queries to the enclosing server block.
-Using this option requires view-capable CoreDNS (https://github.com/chrisohaver/coredns/tree/views).
-
-**Note:** See the [advanced-routing](https://github.com/chrisohaver/conditional/tree/advanced-routing) branch for a version of this plugin that exclusively implements this
-feature, and renames the plugin to "serve".
-
-
-### Syntax
-```
-conditional {
-    view EXPRESSION
-}
-```
-
-* `view` **EXPRESSION** - CoreDNS will not route incoming queries to the enclosing server block
-  if any **EXPRESSION** evaluates to false. See the **Expressions** section below for available variables and functions.
-  
-
-### CoreDNS Views Example
-
-The abstract example below implements CIDR based split DNS routing.  It will return a different
-answer for `test.` depending on client's IP address.  It returns ...
-* `test. 3600 IN A 1.1.1.1`, for queries with a source address in 127.0.0.0/24
-* `test. 3600 IN A 2.2.2.2`, for queries with a source address in 192.168.0.0/16
-* `test. 3600 IN A 3.3.3.3`, for all others
-
-```
-. {
-  conditional {
-    view incidr(client_ip, '127.0.0.0/24')
-  }
-  hosts {
-    1.1.1.1 test
-  }
-}
-
-. {
-  conditional {
-    view incidr(client_ip, '192.168.0.0/16')
-  }
-  hosts {
-    2.2.2.2 test
-  }
-}
-
-. {
-  hosts {
-    3.3.3.3 test
-  }
-}
-```
-
-## Conditional _forward_ Policy
+## Syntax
 
 These options define an expression based forward policy that can be used by the policy-pluggable _fwdpolicy_ plugin.
 (https://github.com/infobloxopen/fwdpolicy).
 
-### Syntax
 ```
 conditional {
     group GROUP-NAME UPSTREAM-INDEX ...
@@ -85,10 +22,10 @@ conditional {
   See the **Expressions** section below for available variables and functions.
 
 
-### Pluggable _forward_ Policy Example
+## Example
 
 The following (abstract) example defines 3 groups, each containing a single upstream server.
-It defines three rules.  When forward uses the `conditional` policy, these rules are
+It defines three rules.  When _fwdpolicy_ uses the `conditional` policy, these rules are
 evaluated...
 * If the client IP address is local (in 127.0.0.0/24), it will forward to group `c` (127.0.0.1:5392)
 * If the query type is `A`, it will forward to group `a` (127.0.0.1:5390)
@@ -150,3 +87,55 @@ evaluated...
 ### Available Functions
 
 * `incidr(ip,cidr)`: returns true if _ip_ is within _cidr_ 
+
+
+## CoreDNS Advanced Routing
+
+_conditional_ also defines an expression based view, with which you can define criteria that control to which server
+blocks queries are routed.  Views are not supported in https://github.com/coredns/coredns. So to use this feature
+you need apply changes to coredns code as applied in the branch: https://github.com/chrisohaver/coredns/tree/views.
+
+### CoreDNS Advanced Routing - Syntax
+```
+conditional {
+    view EXPRESSION
+}
+```
+
+* `view` **EXPRESSION** - CoreDNS will not route incoming queries to the enclosing server block
+  if any **EXPRESSION** evaluates to false. See the **Expressions** section for available variables and functions.
+
+
+### CoreDNS Advanced Routing - Example
+
+The abstract example below implements CIDR based split DNS routing.  It will return a different
+answer for `test.` depending on client's IP address.  It returns ...
+* `test. 3600 IN A 1.1.1.1`, for queries with a source address in 127.0.0.0/24
+* `test. 3600 IN A 2.2.2.2`, for queries with a source address in 192.168.0.0/16
+* `test. 3600 IN A 3.3.3.3`, for all others
+
+```
+. {
+  conditional {
+    view incidr(client_ip, '127.0.0.0/24')
+  }
+  hosts {
+    1.1.1.1 test
+  }
+}
+
+. {
+  conditional {
+    view incidr(client_ip, '192.168.0.0/16')
+  }
+  hosts {
+    2.2.2.2 test
+  }
+}
+
+. {
+  hosts {
+    3.3.3.3 test
+  }
+}
+```
