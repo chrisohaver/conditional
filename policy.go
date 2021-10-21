@@ -3,7 +3,7 @@ package conditional
 import (
 	"context"
 
-	"github.com/chrisohaver/fwdpolicy"
+	"github.com/infobloxopen/fwdpolicy"
 	"github.com/coredns/coredns/plugin/metadata"
 	"github.com/coredns/coredns/request"
 )
