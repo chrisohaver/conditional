@@ -4,7 +4,7 @@ _conditional_ defines an expression based forwarding policy that the _fwdpolicy_
 
 ## Syntax
 
-These options define an expression based forward policy that can be used by the policy-pluggable _fwdpolicy_ plugin.
+These options define an expression based forwarding policy that can be used by the policy-pluggable _fwdpolicy_ plugin.
 (https://github.com/infobloxopen/fwdpolicy).
 
 ```
@@ -15,10 +15,10 @@ conditional {
 ```
 
 * `group` - assigns a **GROUP-NAME** to a set of **UPSTREAM-INDEX**. **UPSTREAM-INDEX** are the
-  integer index of the upstream defined in the forward plugin. e.g. If there are three upstreams
-  defined by forward, then the index values are 0, 1, and 2.
-* `use` - if the **EXPRESSION** evaluates to true for the incoming query, the forward policy will return upstream
-  servers assigned to the **GROUP-NAME**. The forward plugin will then attempt to route the query to those upstreams.
+  integer index of the upstream defined in the _fwdpolicy_ plugin. e.g. If there are three upstreams
+  defined by _fwdpolicy_, then the index values are 0, 1, and 2.
+* `use` - if the **EXPRESSION** evaluates to true for the incoming query, the forwarding policy will return upstream
+  servers assigned to the **GROUP-NAME**. The _fwdpolicy_ plugin will then attempt to route the query to those upstreams.
   See the **Expressions** section below for available variables and functions.
 
 
