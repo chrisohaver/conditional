@@ -84,6 +84,11 @@ evaluated...
 * `server_ip`: server's IP address; for IPv6 addresses these are enclosed in brackets: `[::1]`
 * `server_port` : client's port
 
+#### Metadata
+
+When you enable the _metadata_ plugin, metadata are available as a variables in expressions.
+When including a metadata value in an expression, wrap the metadata name in square brackets e.g.`[example/metadata]`.
+
 ### Available Functions
 
 * `incidr(ip,cidr)`: returns true if _ip_ is within _cidr_ 
@@ -104,6 +109,7 @@ conditional {
 
 * `view` **EXPRESSION** - CoreDNS will not route incoming queries to the enclosing server block
   if any **EXPRESSION** evaluates to false. See the **Expressions** section for available variables and functions.
+  Note metadata variables are not supported in view expressions.
 
 
 ### CoreDNS Advanced Routing - Example

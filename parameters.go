@@ -1,14 +1,17 @@
 package conditional
 
 import (
+	"context"
 	"fmt"
 	"strconv"
 	"strings"
 
+	"github.com/coredns/coredns/plugin/metadata"
 	"github.com/coredns/coredns/request"
 )
 
 type Parameters struct {
+	ctx        context.Context
 	state      *request.Request
 	extractors extractorMap
 }
@@ -63,7 +66,11 @@ func (p Parameters) Get(s string) (interface{}, error) {
 	if v, ok := p.Value(s); ok {
 		return v, nil
 	}
-	return nil, fmt.Errorf("unknown variable '%v'", s)
+	f := metadata.ValueFunc(p.ctx, s)
+	if f == nil {
+		return nil, fmt.Errorf("unknown variable '%v'", s)
+	}
+	return f(), nil
 }
 
 func (p Parameters) Value(s string) (string, bool) {
@@ -88,4 +95,3 @@ func addrToRFC3986(addr string) string {
 	}
 	return addr
 }
-

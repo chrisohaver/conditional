@@ -3,15 +3,15 @@ package conditional
 import (
 	"context"
 
-	"github.com/infobloxopen/fwdpolicy"
 	"github.com/coredns/coredns/plugin/metadata"
 	"github.com/coredns/coredns/request"
+	"github.com/infobloxopen/fwdpolicy"
 )
 
 func (c *Conditional) String() string { return "conditional" }
 
 func (c *Conditional) List(ctx context.Context, p []*fwdpolicy.Proxy, state *request.Request) []*fwdpolicy.Proxy {
-	params := Parameters{state: state, extractors: c.extractors}
+	params := Parameters{ctx: ctx, state: state, extractors: c.extractors}
 	for _, r := range c.fwdRules {
 		result, err := r.expr.Eval(params)
 		if err != nil {
